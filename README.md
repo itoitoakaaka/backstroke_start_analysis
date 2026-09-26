@@ -1,47 +1,50 @@
 # backstroke_start_analysis
 
-Modeling and predicting backstroke start performance using linear regression and artificial neural networks based on biomechanical parameters.
+Regression demo for modeling 5 m backstroke-start performance from biomechanical features.
 
-## Overview
+## Why this project exists
 
-This project investigates the relationship between biomechanical parameters during the backstroke start and the 5m start time. It implements both Linear Regression and a feedforward Artificial Neural Network (ANN) to predict start performance based on kinematic and kinetic features.
+This repository connects swimming biomechanics with reproducible machine-learning evaluation. It compares a simple linear baseline with a nonlinear multilayer perceptron while keeping preprocessing inside each cross-validation fold.
 
-## Features
+## Inputs
 
-- **Linear Regression Model**: Baseline prediction of 5m start time from biomechanical parameters using scikit-learn.
-- **ANN Model**: Deep learning approach using a TensorFlow/Keras Sequential model with dense layers and dropout regularization.
-- **Biomechanical Features**: Includes phase timings (hands-off, take-off, flight, entry), velocities, entry angles, arc angles, and force parameters.
+The model expects biomechanical predictors such as:
 
-## Biomechanical Parameters
+- phase timing
+- take-off / flight / entry velocity
+- entry angles
+- trunk/back-arc angle
+- upper- and lower-limb force / impulse variables
 
-The model uses 18 features including:
-- Phase relative times (hands-off, take-off, flight, entry)
-- Resultant velocities (take-off, flight, entry)
-- Entry angles (wrist, shoulder, hip)
-- Back arc angle
-- Upper/lower limb forces and impulses
+Target:
 
-## Requirements
+- 5 m start time (s)
 
-- Python 3.8+
-- pandas
-- scikit-learn
-- TensorFlow (optional, for ANN model)
+## Models
+
+- Linear regression
+- MLPRegressor with two hidden layers
+
+Both models use StandardScaler inside a scikit-learn Pipeline so the scaler is fitted only on training folds.
+
+## Evaluation
+
+The script uses repeated K-fold cross-validation and reports:
+
+- MAE
+- RMSE
+- R²
+
+This is intended as a methodological comparison, not evidence that a neural network necessarily outperforms a linear model. For small biomechanical datasets, uncertainty and sample size should be considered carefully.
 
 ## Setup
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
 
 ## Usage
 
-```bash
-python backstroke_start.py <csv_data_file>
-# Example:
-python backstroke_start.py biomechanics_data.csv
-```
+    python backstroke_start.py biomechanics_data.csv
 
-> **Note**: The CSV file must contain all 18 biomechanical parameter columns and a `5 m start time (s)` target column. If TensorFlow is not installed, only the Linear Regression model will run.
+The input CSV must contain all feature columns listed in backstroke_start.py and the target column "5 m start time (s)".
